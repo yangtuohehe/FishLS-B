@@ -9,40 +9,39 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class InteractionController {
+    private final DeviceDataService deviceDataService;
 
-    private final InteractionService interactionService;
-
-    public InteractionController(InteractionService interactionService) {
-        this.interactionService = interactionService;
+    public InteractionController(DeviceDataService deviceDataService) {
+        this.deviceDataService = deviceDataService;
     }
 
     @GetMapping("/entities/locations")
-    public Result<Map<String, LocationDto>> getLocations(@RequestParam String ids) {
-        Map<String, LocationDto> locations = interactionService.getDeviceLocations(ids);
-        return Result.success(locations);
+    public Result<Map<String, Location>> getLocations(@RequestParam String ids) {
+        Map<String, Location> locations = deviceDataService.getDeviceLocations(ids);
+        return new Result<>(locations);
     }
 
     @GetMapping("/observations/history/batch")
-    public Result<Map<String, ChartDataDto>> getHistoryBatch(@RequestParam String ids) {
-        Map<String, ChartDataDto> historyData = interactionService.getDeviceHistoryBatch(ids);
-        return Result.success(historyData);
+    public Result<Object> getHistoryBatch(@RequestParam String ids) {
+        // 由于前端折线图主要依靠WebSocket实时追加数据，该接口可返回空壳对象防止控制台报错
+        return new Result<>(new Object());
     }
 
     @PostMapping("/control/mode")
-    public Result<Void> switchControlMode(@RequestBody ModeSwitchRequest request) {
-        interactionService.updateDeviceMode(request.getDeviceId(), request.getMode());
-        return Result.success();
+    public Result<Void> switchControlMode(@RequestBody ModeRequest request) {
+        deviceDataService.updateValveMode(request.deviceId, request.mode);
+        return new Result<>(null);
     }
 
     @PostMapping("/control/command")
     public Result<Void> sendControlCommand(@RequestBody CommandRequest request) {
-        interactionService.executePhysicalCommand(request.getDeviceId(), request.getTargetValue());
-        return Result.success();
+        deviceDataService.executePhysicalCommand(request.deviceId, request.targetValue);
+        return new Result<>(null);
     }
 
     @PutMapping("/rules/declaration")
     public Result<Void> declareRules(@RequestBody RuleDeclarationRequest request) {
-        interactionService.syncRules(request.getRules());
-        return Result.success();
+        deviceDataService.updateRules(request.rules);
+        return new Result<>(null);
     }
 }
