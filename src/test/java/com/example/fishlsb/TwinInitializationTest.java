@@ -30,8 +30,12 @@ public class TwinInitializationTest {
 
         InitRequest request = new InitRequest();
         List<String> deviceIds = Arrays.asList(
-                "STATION_A", "STATION_B", "STATION_C",
-                "STATION_D", "STATION_E", "MAIN_VALVE_1"
+                "DEV-ST-001",
+                "DEV-ST-002",
+                "DEV-ST-003",
+                "DEV-ST-004",
+                "DEV-ST-005",
+                "DEV-VALVE-001"
         );
         request.setDeviceIds(deviceIds);
 
