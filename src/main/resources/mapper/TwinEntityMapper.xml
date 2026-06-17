@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fishlsb.mapper.TwinEntityMapper">
+    <select id="findByDeviceIds" resultType="com.example.fishlsb.entity.TwinEntity">
+        SELECT
+        s.device_id AS deviceId,
+        t.entity_name AS deviceName,
+        ST_X(s.location) AS longitude,
+        ST_Y(s.location) AS latitude
+        FROM entity_static_observation s
+        LEFT JOIN twin_entity t ON s.entity_id = t.entity_id
+        WHERE s.device_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>
