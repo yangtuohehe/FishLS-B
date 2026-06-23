@@ -1,10 +1,11 @@
 package com.example.fishlsb.mapper;
 
-import com.example.fishlsb.entity.TwinEntity;
+import com.example.fishlsb.dto.DeviceInitResponse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
 public interface TwinEntityMapper {
-    List<TwinEntity> findByDeviceIds(List<String> deviceIds);
+    List<DeviceInitResponse> findInitInfoByDeviceIds(@Param("deviceIds") List<String> deviceIds);
 }
