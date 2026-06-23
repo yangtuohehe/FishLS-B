@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fishlsb.mapper.TwinEntityMapper">
+
+    <select id="findInitInfoByDeviceIds" resultType="com.example.fishlsb.dto.DeviceInitResponse">
+        SELECT
+        t.device_id AS deviceId,
+        t.entity_name AS entityName,
+        c.attribute_name AS dynamicPropertyName,
+        ST_X(o.geom) AS longitude,
+        ST_Y(o.geom) AS latitude
+        FROM twin_entity t
+        LEFT JOIN entity_static_observation o ON t.entity_id = o.entity_id
+        LEFT JOIN entity_control_attribute c ON t.entity_id = c.entity_id
+        WHERE t.device_id IN
+        <foreach item="id" collection="deviceIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>
